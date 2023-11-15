@@ -17,7 +17,7 @@ public class CustomerService {
      * @return {@link Optional}, содержащий клиента, если найден, или пустой {@link Optional}, если не найден.
      */
     public Optional<Customer> getById(int id) {
-        return null;
+        return repository.getCustomerById(id);
     }
 
     /**
@@ -26,7 +26,11 @@ public class CustomerService {
      * @param customer Клиент, которого нужно создать и добавить.
      * @throws IllegalArgumentException Если клиент с таким идентификатором уже существует в репозитории.
      */
-    public void createCustomer(Customer customer) {
+    public void createCustomer(Customer customer)throws IllegalArgumentException {
+        if (repository.getCustomerById(customer.getId()).isPresent()){
+            throw new IllegalArgumentException("Customer with the same id already exists");
+        }
+        repository.addCustomer(customer);
     }
 
     /**
@@ -35,6 +39,10 @@ public class CustomerService {
      * @param id Уникальный идентификатор клиента, которого нужно удалить.
      * @throws IllegalArgumentException Если клиент с указанным идентификатором не существует в репозитории.
      */
-    public void removeCustomer(int id) {
+    public void removeCustomer(int id) throws IllegalArgumentException {
+        if (repository.getCustomerById(id).isEmpty()){
+            throw new IllegalArgumentException("Customer does not exist");
+        }
+        repository.removeCustomer(id);
     }
 }
